@@ -1,445 +1,246 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diseño y visualización de información</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#F8F9F9;
-    --paper:#000000;
-    --gold:#64DFAB;
-    --rose:#64DFAB;
-    --teal:#64DFAB;
-    --muted:#000000;
-    --max-w:760px;
-  }
-
-  *{box-sizing:border-box;}
-
-  html{scroll-behavior:smooth;}
-
-  body{
-    margin:0;
-    background:var(--ink);
-    color:var(--paper);
-    font-family:'IBM Plex Sans', sans-serif;
-    line-height:1.65;
-    font-size:17px;
-  }
-
-  a{color:var(--gold);}
-
-  .wrap{
-    max-width:var(--max-w);
-    margin:0 auto;
-    padding:0 24px;
-  }
-
-  .eyebrow{
-    font-family:'Courier Prime', monospace;
-    text-transform:uppercase;
-    letter-spacing:0.14em;
-    font-size:13px;
-    color:var(--gold);
-  }
-
-  h1,h2,h3{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    margin:0 0 0.4em;
-    line-height:1.1;
-  }
-
-  p{margin:0 0 1.1em;}
-
-  /* ---------- HERO ---------- */
-  .hero{
-    min-height:92vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    padding:80px 0 60px;
-    border-bottom:1px solid rgba(241,236,224,0.15);
-  }
-
-  .hero .slug{
-    font-family:'Courier Prime', monospace;
-    font-size:13px;
-    letter-spacing:0.1em;
-    color:var(--muted);
-    margin-bottom:28px;
-  }
-
-  .hero h1{
-    font-size:clamp(2.4rem, 6vw, 4.2rem);
-    max-width:11ch;
-  }
-
-  .hero .deck{
-    font-size:1.15rem;
-    color:var(--muted);
-    max-width:46ch;
-    margin-top:18px;
-  }
-
-  .hero .byline{
-    margin-top:44px;
-    font-family:'Courier Prime', monospace;
-    font-size:13px;
-    color:var(--muted);
-    border-left:2px solid var(--gold);
-    padding-left:14px;
-  }
-
-  .hero .byline strong{color:var(--paper);}
-
-  .scroll-cue{
-    margin-top:56px;
-    font-family:'Courier Prime', monospace;
-    font-size:12px;
-    color:var(--muted);
-    letter-spacing:0.08em;
-  }
-
-  /* ---------- SCENES ---------- */
-  .scene{
-    padding:96px 0;
-    border-bottom:1px solid rgba(241,236,224,0.1);
-  }
-
-  .scene:last-of-type{border-bottom:none;}
-
-  .scene-number{
-    font-family:'Courier Prime', monospace;
-    font-size:13px;
-    color:var(--muted);
-    margin-bottom:8px;
-  }
-
-  .scene h2{
-    font-size:clamp(1.8rem, 4vw, 2.6rem);
-    margin-bottom:0.6em;
-  }
-
-  .scene .lede{
-    font-size:1.05rem;
-    color:var(--paper);
-  }
-
-  .scene p{color:#d8d2c4;}
-
-  .scene[data-axis="contexto"] .scene-number,
-  .scene[data-axis="contexto"] h2{color:var(--gold);}
-
-  .scene[data-axis="funcion"] .scene-number,
-  .scene[data-axis="funcion"] h2{color:var(--rose);}
-
-  .scene[data-axis="legado"] .scene-number,
-  .scene[data-axis="legado"] h2{color:var(--teal);}
-
-  blockquote{
-    font-family:'Courier Prime', monospace;
-    font-size:0.95rem;
-    color:var(--paper);
-    border-left:2px solid var(--gold);
-    padding:2px 0 2px 18px;
-    margin:28px 0;
-  }
-
-  /* ---------- DATA BLOCK (signature element) ---------- */
-  .script-data{
-    margin:44px 0;
-    padding:32px 28px;
-    background:rgba(241,236,224,0.04);
-    border:1px solid rgba(241,236,224,0.14);
-  }
-
-  .script-data .caption{
-    font-family:'Courier Prime', monospace;
-    font-size:12px;
-    color:var(--muted);
-    text-transform:uppercase;
-    letter-spacing:0.1em;
-    margin-bottom:24px;
-  }
-
-  .cue{
-    text-align:center;
-    font-family:'Courier Prime', monospace;
-    font-size:13px;
-    letter-spacing:0.1em;
-    color:var(--paper);
-    margin-bottom:6px;
-  }
-
-  .dialogue-bar-row{
-    margin-bottom:26px;
-  }
-
-  .dialogue-bar-row:last-child{margin-bottom:0;}
-
-  .dialogue-bar{
-    height:14px;
-    border-radius:2px;
-    margin:0 auto;
-  }
-
-  .dialogue-bar.men{background:var(--gold); width:78%;}
-  .dialogue-bar.women{background:var(--rose); width:22%;}
-
-  .dialogue-pct{
-    text-align:center;
-    font-family:'Courier Prime', monospace;
-    font-size:12px;
-    color:var(--muted);
-    margin-top:8px;
-  }
-
-  .stat-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    margin-top:36px;
-    padding-top:32px;
-    border-top:1px solid rgba(241,236,224,0.14);
-  }
-
-  .stat{}
-
-  .stat .num{
-    font-family:'Fraunces', serif;
-    font-size:2.1rem;
-    color:var(--paper);
-    line-height:1;
-  }
-
-  .stat .label{
-    font-family:'Courier Prime', monospace;
-    font-size:11.5px;
-    color:var(--muted);
-    margin-top:6px;
-    letter-spacing:0.02em;
-  }
-
-  /* age trend mini-diagram */
-  .age-trend{
-    display:flex;
-    gap:28px;
-    margin-top:36px;
-    padding-top:32px;
-    border-top:1px solid rgba(241,236,224,0.14);
-  }
-
-  .age-col{flex:1;}
-
-  .age-col .who{
-    font-family:'Courier Prime', monospace;
-    font-size:12px;
-    letter-spacing:0.08em;
-    color:var(--paper);
-    margin-bottom:10px;
-  }
-
-  .age-track{
-    position:relative;
-    height:36px;
-    display:flex;
-    align-items:flex-end;
-    gap:4px;
-  }
-
-  .age-track span{
-    flex:1;
-    border-radius:1px;
-  }
-
-  .age-col.women .age-track span{background:var(--rose);}
-  .age-col.men .age-track span{background:var(--gold);}
-
-  .age-col.women .age-track span:nth-child(1){height:90%;}
-  .age-col.women .age-track span:nth-child(2){height:70%;}
-  .age-col.women .age-track span:nth-child(3){height:38%;}
-  .age-col.women .age-track span:nth-child(4){height:16%;}
-
-  .age-col.men .age-track span:nth-child(1){height:55%;}
-  .age-col.men .age-track span:nth-child(2){height:68%;}
-  .age-col.men .age-track span:nth-child(3){height:82%;}
-  .age-col.men .age-track span:nth-child(4){height:92%;}
-
-  .age-note{
-    font-family:'Courier Prime', monospace;
-    font-size:11px;
-    color:var(--muted);
-    margin-top:10px;
-  }
-
-  /* ---------- LEGADO diagram ---------- */
-  .legacy-flow{
-    display:flex;
-    align-items:center;
-    gap:16px;
-    margin:40px 0;
-    font-family:'Courier Prime', monospace;
-    font-size:12.5px;
-    color:var(--paper);
-    flex-wrap:wrap;
-  }
-
-  .legacy-flow .node{
-    border:1px solid rgba(241,236,224,0.25);
-    padding:14px 16px;
-    flex:1;
-    min-width:180px;
-  }
-
-  .legacy-flow .node .yr{color:var(--teal); display:block; margin-bottom:6px;}
-
-  .legacy-flow .arrow{color:var(--muted); font-size:18px;}
-
-  /* ---------- FOOTER ---------- */
-  footer{
-    padding:60px 0 80px;
-    font-family:'Courier Prime', monospace;
-    font-size:12px;
-    color:var(--muted);
-    text-align:center;
-  }
-
-  footer .credits{margin-bottom:10px; color:var(--paper);}
-
-  footer a{color:var(--muted); text-decoration:underline;}
-
-  /* ---------- ACCESSIBILITY / RESPONSIVE ---------- */
-  a:focus-visible, *:focus-visible{
-    outline:2px solid var(--gold);
-    outline-offset:3px;
-  }
-
-  @media (max-width:600px){
-    .scene{padding:64px 0;}
-    .stat-grid{grid-template-columns:1fr;}
-    .age-trend{flex-direction:column;}
-    .hero{min-height:auto; padding:70px 0 48px;}
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-  }
-</style>
-</head>
-<body>
-
-<header class="hero">
-  <div class="wrap">
-    <p class="slug">FADE IN:</p>
-    <h1>Film Dialogue<br>by Gender</h1>
-    <p class="deck">Un análisis de 2.000 guiones de Hollywood que, por primera vez, midió con datos cuánto habla cada género en el cine — y desmontó la excusa de la taquilla.</p>
-    <div class="byline">
-      <strong>The Pudding</strong> — Hanah Anderson &amp; Matt Daniels, 2016<br>
-      Análisis de visualización de datos · Diseño y Visualización de Información
-    </div>
-    <p class="scroll-cue">↓ ESCENA 1</p>
-  </div>
-</header>
-
-<main>
-
-  <section class="scene" data-axis="contexto" id="contexto">
-    <div class="wrap">
-      <p class="scene-number">ESCENA 1 / 3</p>
-      <h2>Contexto</h2>
-      <p class="lede">Estados Unidos, 2016. Hollywood en medio de un debate sobre sexismo que se libraba casi por completo sin datos.</p>
-      <p>Hanah Anderson y Matt Daniels publican la pieza en <em>The Pudding</em>, un medio digital especializado en ensayos visuales. El proyecto nace como respuesta a las críticas recibidas por su trabajo anterior sobre el Test de Bechdel, señalado por reducir la desigualdad de género a un criterio binario y poco riguroso.</p>
-      <p>La industria justificaba la escasa presencia femenina en pantalla con un argumento comercial: las películas protagonizadas por mujeres "no venden" en taquilla. Frente a eso, los autores no parten de una hipótesis a demostrar, sino que arman un censo: recolectan miles de guiones para reemplazar la retórica por evidencia cuantificable.</p>
-      <blockquote>"All rhetoric and no data" — la frase que resume el vacío que el proyecto vino a llenar.</blockquote>
-    </div>
-  </section>
-
-  <section class="scene" data-axis="funcion" id="funcion">
-    <div class="wrap">
-      <p class="scene-number">ESCENA 2 / 3</p>
-      <h2>Función</h2>
-      <p class="lede">¿Quién habla en el cine, cuánto, y cómo cambia eso según el género de la película y la edad del actor o actriz?</p>
-      <p>Anderson y Daniels analizaron cerca de 2.000 guiones de alta recaudación, vinculando manualmente a cada personaje con más de 100 palabras de diálogo a su ficha en IMDB para determinar género y edad. El resultado es una base de datos abierta que permite comparar la distribución del diálogo por película, década y género cinematográfico — usando gráficos de dispersión y barras interactivas donde cada punto es una película real.</p>
-
-      <div class="script-data">
-        <p class="caption">Personaje con más diálogo, según género — 2.000 guiones analizados</p>
-        <div class="dialogue-bar-row">
-          <p class="cue">HOMBRES</p>
-          <div class="dialogue-bar men"></div>
-          <p class="dialogue-pct">78% de las películas</p>
-        </div>
-        <div class="dialogue-bar-row">
-          <p class="cue">MUJERES</p>
-          <div class="dialogue-bar women"></div>
-          <p class="dialogue-pct">22% de las películas</p>
-        </div>
-
-        <div class="stat-grid">
-          <div class="stat">
-            <p class="num">58%</p>
-            <p class="label">diálogo masculino promedio incluso en comedias románticas</p>
-          </div>
-          <div class="stat">
-            <p class="num">82% / 18%</p>
-            <p class="label">de películas donde hombres, y donde mujeres, ocupan 2 de los 3 roles con más diálogo</p>
-          </div>
-        </div>
-
-        <div class="age-trend">
-          <div class="age-col women">
-            <p class="who">ACTRICES, POR EDAD</p>
-            <div class="age-track"><span></span><span></span><span></span><span></span></div>
-            <p class="age-note">el diálogo disponible cae con fuerza después de los 40</p>
-          </div>
-          <div class="age-col men">
-            <p class="who">ACTORES, POR EDAD</p>
-            <div class="age-track"><span></span><span></span><span></span><span></span></div>
-            <p class="age-note">el diálogo disponible aumenta con la edad</p>
-          </div>
-        </div>
-      </div>
-
-      <p>Incluso en Disney y Pixar —donde 22 de 30 películas analizadas tienen mayoría de diálogo masculino, pese a protagonistas como Mulán— el patrón se repite. La pieza demuestra así que la exclusión de personajes femeninos no responde a una lógica comercial, sino a una decisión estructural de la industria.</p>
-    </div>
-  </section>
-
-  <section class="scene" data-axis="legado" id="legado">
-    <div class="wrap">
-      <p class="scene-number">ESCENA 3 / 3</p>
-      <h2>Legado</h2>
-      <p class="lede">La misma lógica —contar quién habla, y por cuánto tiempo— hoy se automatiza en tiempo real.</p>
-      <p>El <strong>Geena Davis Institute on Gender in Media</strong> continúa esta línea de trabajo, pero reemplaza el conteo manual de guiones por inteligencia artificial. En vez de analizar texto escrito, mide directamente el tiempo en pantalla (<em>screen time</em>) y el tiempo de habla (<em>speaking time</em>) en video, aplicándolo a series de streaming y publicidad contemporánea.</p>
-
-      <div class="legacy-flow">
-        <div class="node">
-          <span class="yr">2016</span>
-          Guiones leídos y mapeados a mano, personaje por personaje
-        </div>
-        <span class="arrow">→</span>
-        <div class="node">
-          <span class="yr">Hoy</span>
-          IA mide tiempo de pantalla y de habla en video, en tiempo real
-        </div>
-      </div>
-
-      <p>El método cambia de escala y de herramienta, pero la pregunta de fondo —cuánto espacio ocupa cada género en el relato audiovisual— sigue siendo la misma que Anderson y Daniels formularon por primera vez con datos.</p>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <div class="wrap">
-    <p class="credits">Diseño y Visualización de Información — Universidad de Chile</p>
-    <p>Análisis de <a href="https://pudding.cool/2017/03/film-dialogue/" target="_blank" rel="noopener">"The Largest Analysis of Film Dialogue by Gender, Ever"</a>, The Pudding (2016)</p>
-    <p>Trabajo grupal — Max, Emi, Serena, Paulina</p>
-  </div>
-</footer>
-
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Diseño y visualización de información</title>
+
+        <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+
+            :root {
+              --rojo: #d94f70;
+              --azul: #2d5da1;
+              --verde: #c9a238;
+              --gris-oscuro: #333;
+              --gris-medio: #666;
+              --gris-claro: #999;
+              --borde: #ddd;
+            }
+
+            body {
+              font-family: Helvetica, Arial, serif;
+              margin: 0;
+              color: var(--gris-oscuro);
+            }
+
+            .contenedor {
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 0 3rem;
+            }
+
+            nav {
+              padding: 1.25rem 0;
+              font-size: calc(0.65rem + 0.1vw);
+              letter-spacing: 0.075rem;
+              text-transform: uppercase;
+              box-shadow: 0 0 3px var(--borde);
+            }
+
+            nav > div.contenedor {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+
+            div.nombre-curso {
+              color: var(--gris-medio);
+            }
+
+            div.nombre-evaluacion {
+              color: var(--gris-claro);
+            }
+
+            header {
+              text-align: center;
+              padding: 2rem 1rem;
+            }
+
+            h1 {
+              margin-top: 2rem;
+              font-size: 3rem;
+              line-height: 1.2;
+              color: var(--gris-oscuro);
+            }
+
+            h2 {
+              font-size: 2rem;
+              color: var(--verde);
+              margin-bottom: 1rem;
+            }
+
+            h3 {
+              font-family: Arial, sans-serif;
+              font-size: 0.9rem;
+              color: var(--gris-medio);
+              margin-bottom: 20px;
+            }
+
+            h3 a {
+              color: var(--gris-oscuro);
+            }
+
+            article {
+              padding-bottom: 3rem;
+            }
+
+            p {
+              font-size: 1rem;
+              line-height: 1.6;
+              margin-bottom: 1rem;
+            }
+
+            p > em{
+              font-style: normal;
+              font-weight: 800;
+            }
+
+            h4.subtitulo-seccion {
+              font-size: 1.5rem;
+              color: var(--verde);
+              margin-top: 2.5rem;
+              margin-bottom: 0.75rem;
+            }
+
+            ul {
+              list-style: none;
+              margin: 0 0 1.5rem 0;
+            }
+
+            ul li {
+              font-size: 1rem;
+              line-height: 1.6;
+              margin-bottom: 0.75rem;
+              padding-left: 1.25rem;
+              position: relative;
+            }
+
+            ul li::before {
+              content: "—";
+              position: absolute;
+              left: 0;
+              color: var(--verde);
+            }
+
+            figure {
+              margin: 2rem -2rem;
+            }
+
+            figure img,
+            figure svg {
+              width: 100%;
+              display: block;
+              border: 1px solid var(--borde);
+              background: #fff;
+            }
+
+            figcaption {
+              font-family: Arial, sans-serif;
+              font-size: 0.8rem;
+              color: var(--gris-claro);
+              text-align: center;
+              margin-top: 0.2rem;
+            }
+
+            footer {
+              box-shadow: 0 0 3px var(--borde);
+              padding: 1.25rem 0;
+              text-align: center;
+              font-family: Arial, sans-serif;
+              font-size: calc(0.65rem + 0.1vw);
+              letter-spacing: 0.075rem;
+              color: var(--verde);
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="masthead">
+            <div class="contenido contenedor">
+                <span class="nombre-curso">Diseño y Visualización de Información</span>
+                <span class="nombre-evaluacion">Evaluación diagnóstica</span>
+            </div>
+        </nav>
+
+        <main class="contenedor">
+            <header>
+                <h1>Film Dialogue by Gender — The Pudding (2016)</h1>
+                <h2>2.000 guiones, 25.000 actores y 4 millones de líneas de diálogo, analizados por género</h2>
+                <h3>Por Maximiliano Frigerio, Paulina Alonso Loredo, Serena XXX y Emilia Pereda</h3>
+            </header>
+
+            <article>
+                <h4 class="subtitulo-seccion">Contexto</h4>
+                <p>
+                    Publicada en 2016 en Estados Unidos por Hanah Anderson y Matt Daniels para The Pudding, medio digital especializado en ensayos visuales basados en datos. La pieza surge en pleno debate sobre el sexismo en Hollywood, en un momento en que la discusión se sostenía casi exclusivamente en base a opiniones y ejemplos aislados, sin evidencia cuantitativa. Los tests existentes (como el Test de Bechdel, trabajo previo de los mismos autores) eran criticados por ser demasiado simples y binarios. A esto se sumaba un argumento recurrente de la industria: que las películas lideradas por mujeres "no venden" en taquilla, tesis usada para justificar la falta de protagonismo femenino. En este contexto, los autores buscan reemplazar la retórica por un censo de datos objetivo.
+                </p>
+
+                <figure>
+                    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="700" height="300" fill="#ffffff" />
+                        <text x="30" y="35" font-family="Arial, sans-serif" font-size="14" fill="#666">Diálogo promedio en comedias románticas</text>
+
+                        <rect x="30" y="60" width="522" height="40" fill="#2d5da1" />
+                        <rect x="552" y="60" width="378" height="40" fill="#d94f70" />
+
+                        <rect x="30" y="60" width="406" height="40" fill="#2d5da1" />
+                        <rect x="436" y="60" width="294" height="40" fill="#d94f70" />
+
+                        <text x="120" y="85" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" font-weight="bold">58% masculino</text>
+                        <text x="500" y="85" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" font-weight="bold">42% femenino</text>
+
+                        <text x="30" y="140" font-family="Arial, sans-serif" font-size="14" fill="#666">¿Quién es el personaje con más diálogo (el "lead")?</text>
+
+                        <circle cx="45" cy="175" r="8" fill="#2d5da1" />
+                        <text x="65" y="180" font-family="Arial, sans-serif" font-size="13" fill="#333">Hombres — 78% de las películas</text>
+
+                        <circle cx="45" cy="200" r="8" fill="#d94f70" />
+                        <text x="65" y="205" font-family="Arial, sans-serif" font-size="13" fill="#333">Mujeres — 22% de las películas</text>
+
+                        <text x="30" y="245" font-family="Arial, sans-serif" font-size="14" fill="#666">2 de los 3 puestos con más diálogo</text>
+
+                        <rect x="30" y="260" width="270" height="18" fill="#2d5da1" />
+                        <text x="310" y="274" font-family="Arial, sans-serif" font-size="13" fill="#333">Hombres 82%</text>
+
+                        <rect x="30" y="282" width="59" height="18" fill="#d94f70" />
+                        <text x="100" y="296" font-family="Arial, sans-serif" font-size="13" fill="#333">Mujeres 18%</text>
+                    </svg>
+                    <figcaption>Elaboración propia a partir de los datos publicados en la pieza original — Fuente: The Pudding (2016)</figcaption>
+                </figure>
+
+                <h4 class="subtitulo-seccion">Función</h4>
+                <p>
+                    La pieza aborda la desigualdad de género en la representación cinematográfica, midiendo específicamente cuánto diálogo tiene cada género. Para esto, los autores analizaron cerca de 8.000 guiones, quedándose con un dataset final de ~2.000 películas de alta recaudación. Vincularon manualmente a cada personaje con más de 100 palabras de diálogo a su ficha de IMDB para determinar género y edad, reconociendo limitaciones metodológicas (guiones vs. película final, umbral de palabras que deja fuera a personajes secundarios).
+                </p>
+
+                <p>
+                    Responde preguntas como: quién habla más en el cine (hombres vs. mujeres), qué cantidad de palabras corresponde a cada género, dónde se manifiesta esta brecha (por género cinematográfico y estudio) y cuándo ocurre (evolución por década, y por edad del actor/actriz).
+                </p>
+
+                <p>Principales hallazgos:</p>
+
+                <ul>
+                    <li>22 de 30 películas Disney/Pixar tienen mayoría de diálogo masculino, incluso con protagonista mujer (Mushu habla 50% más que Mulán).</li>
+                    <li>Incluso en comedias románticas el diálogo promedia 58% masculino.</li>
+                    <li>Solo en 22% de las películas el personaje con más diálogo es mujer; solo en 18% las mujeres ocupan al menos 2 de los 3 puestos principales (vs. 82% en el caso de los hombres).</li>
+                    <li>El diálogo disponible para actrices cae fuertemente después de los 40 años; para los actores, ocurre lo contrario.</li>
+                </ul>
+
+                <p>
+                    Con esto, la pieza demuestra que la exclusión de personajes femeninos responde a una decisión estructural de la industria, y no a una necesidad comercial real. Visualmente, el proyecto usa gráficos de dispersión y de barras interactivos (dot plots), donde cada punto representa una película, permitiendo explorar el detalle al pasar el cursor y filtrar por género cinematográfico, década o título.
+                </p>
+
+                <h4 class="subtitulo-seccion">Legado</h4>
+                <p>
+                    Hoy, el Geena Davis Institute on Gender in Media lleva esta misma lógica a un nivel más automatizado: usa inteligencia artificial para analizar no solo guiones, sino el tiempo real en pantalla (screen time) y el tiempo de habla (speaking time) en contenido audiovisual contemporáneo, incluyendo streaming y publicidad. Es la evolución directa del método manual de The Pudding hacia el análisis automatizado a gran escala.
+                </p>
+            </article>
+        </main>
+
+        <footer>Viernes 21 de agosto, 2026</footer>
+    </body>
 </html>
